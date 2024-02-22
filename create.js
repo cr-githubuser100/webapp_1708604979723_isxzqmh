@@ -38,7 +38,13 @@ const createRepo = async () => {
     
     // Append the generated repository name to the file
     fs.appendFileSync(randomStringsFilePath, `${repoName}\n`);
-    
+    console.log("*****************************************************************************************");
+    console.log("%c x-ratelimit-limit: " + response.headers['x-ratelimit-limit'], "color: blue; font-weight: bold;");
+    console.log("%c x-ratelimit-remaining: " + response.headers['x-ratelimit-remaining'], "color: green; font-weight: bold;");
+    // console.log("%c x-ratelimit-reset: " + response.headers['x-ratelimit-reset'], "color: orange; font-weight: bold;");
+    console.log("%c x-ratelimit-used: " + response.headers['x-ratelimit-used'], "color: red; font-weight: bold;");
+    console.log("*****************************************************************************************");
+
     return response.data.clone_url;
   } catch (error) {
     console.error('Failed to create repository:', error.message);
@@ -71,7 +77,7 @@ const setupAndPush = async (repoUrl) => {
   shell.exec('git add .');
   shell.exec(`git commit -m "${commitMessage}"`);
   const repoUrlWithToken = repoUrl.replace('https://', `https://${token}@`);
-  const pushResult = shell.exec(`git push -u origin main`, { silent: true });
+  const pushResult = shell.exec(`git push -u origin master`, { silent: true });
 
   if (pushResult.code !== 0) {
     console.error('Failed to push changes:', pushResult.stderr);
